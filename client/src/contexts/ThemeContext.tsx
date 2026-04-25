@@ -1,32 +1,58 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-
-type Theme = "light" | "dark";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { PALETTES, type PaletteKey, type ThemeMode } from "@shared/appTypes";
 
 interface ThemeContextType {
-  theme: Theme;
-  toggleTheme?: () => void;
+  theme: ThemeMode;
+  palette: PaletteKey;
   switchable: boolean;
+  toggleTheme?: () => void;
+  setTheme: (theme: ThemeMode) => void;
+  setPalette: (palette: PaletteKey) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 interface ThemeProviderProps {
   children: React.ReactNode;
-  defaultTheme?: Theme;
+  defaultTheme?: ThemeMode;
+  defaultPalette?: PaletteKey;
   switchable?: boolean;
+}
+
+function applyPalette(palette: PaletteKey) {
+  const p = PALETTES[palette];
+  if (!p) return;
+  const root = document.documentElement;
+  root.style.setProperty("--primary", p.primary);
+  root.style.setProperty("--primary-foreground", p.primaryForeground);
+  root.style.setProperty("--ring", p.ring);
+  root.style.setProperty("--sidebar-primary", p.primary);
+  root.style.setProperty("--sidebar-primary-foreground", p.primaryForeground);
+  root.style.setProperty("--sidebar-ring", p.ring);
+  root.style.setProperty("--chart-1", p.chart1);
+  root.style.setProperty("--chart-2", p.chart2);
+  root.style.setProperty("--chart-3", p.chart3);
+  root.style.setProperty("--chart-4", p.chart4);
+  root.style.setProperty("--chart-5", p.chart5);
 }
 
 export function ThemeProvider({
   children,
-  defaultTheme = "light",
+  defaultTheme = "dark",
+  defaultPalette = "midnight-blue",
   switchable = false,
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [theme, setThemeState] = useState<ThemeMode>(() => {
     if (switchable) {
       const stored = localStorage.getItem("theme");
-      return (stored as Theme) || defaultTheme;
+      return (stored as ThemeMode) || defaultTheme;
     }
     return defaultTheme;
+  });
+
+  const [palette, setPaletteState] = useState<PaletteKey>(() => {
+    const stored = localStorage.getItem("palette");
+    return (stored as PaletteKey) || defaultPalette;
   });
 
   useEffect(() => {
@@ -36,20 +62,25 @@ export function ThemeProvider({
     } else {
       root.classList.remove("dark");
     }
-
     if (switchable) {
       localStorage.setItem("theme", theme);
     }
   }, [theme, switchable]);
 
+  useEffect(() => {
+    applyPalette(palette);
+    localStorage.setItem("palette", palette);
+  }, [palette]);
+
   const toggleTheme = switchable
-    ? () => {
-        setTheme(prev => (prev === "light" ? "dark" : "light"));
-      }
+    ? () => setThemeState(prev => (prev === "light" ? "dark" : "light"))
     : undefined;
 
+  const setTheme = useCallback((t: ThemeMode) => setThemeState(t), []);
+  const setPalette = useCallback((p: PaletteKey) => setPaletteState(p), []);
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, switchable }}>
+    <ThemeContext.Provider value={{ theme, palette, switchable, toggleTheme, setTheme, setPalette }}>
       {children}
     </ThemeContext.Provider>
   );

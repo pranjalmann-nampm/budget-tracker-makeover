@@ -1,0 +1,29 @@
+# Project TODO
+
+- [x] Database schema: transactions table with all fields (amount, date, category, description, type, merchant, receiptUrl)
+- [x] Database schema: categories table with predefined categories (Food, Transport, Shopping, Bills, Health, Entertainment, Income) with colors and icons
+- [x] Database schema: user_settings table for theme, currency, notification preferences
+- [x] Backend tRPC routers: full CRUD for transactions (create, read, update, delete)
+- [x] Backend tRPC routers: categories management (list, create custom)
+- [x] Backend tRPC routers: user settings (get, update)
+- [x] Backend tRPC routers: receipt scanning via LLM vision model
+- [x] Backend tRPC routers: import/export JSON and CSV
+- [x] Global dark theme with CSS variables and OKLCH colors
+- [x] Theme system: 4 preset palettes (Midnight Blue, Emerald, Rose Gold, Slate) + dark/light toggle
+- [x] DashboardLayout with sidebar navigation (Dashboard, Transactions, Analytics, Settings)
+- [x] Dashboard page: total balance card, income/expense summary, recent transactions, quick-add FAB
+- [x] Transactions page: search, filter by type/category/date range, sortable columns, paginated list
+- [x] Transaction editing: click any transaction to open modal editor for all fields
+- [x] Transaction categorization with colored icons for each category
+- [x] Receipt/photo scanning: camera capture or image upload, LLM vision extraction, pre-fill form
+- [x] Analytics page: daily net-balance line graph
+- [x] Analytics page: monthly income vs expense bar chart
+- [x] Analytics page: category breakdown doughnut chart
+- [x] Settings page: manage custom categories
+- [x] Settings page: default currency selection
+- [x] Settings page: notification preferences
+- [x] Settings page: theme customization (palette picker + dark/light toggle)
+- [x] Import/export data in JSON and CSV formats (frontend-side format handling, backend provides raw data endpoints)
+- [x] Per-user data persistence (all data scoped to authenticated user)
+- [x] Vitest tests: 21 tests covering all backend procedures and shared types
+- [x] TypeScript: zero compilation errors
